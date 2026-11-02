@@ -220,11 +220,28 @@ function renderHeroStats({ players, events, best, writeups }) {
 }
 
 let nextMatch = null;
+
+/* Forgiving date reader for next-match.json.
+   Accepts "2026-11-14T09:00:00+08:00", "2026-11-14 T 09:00", "2026-11-14 09:00", "2026-11-14".
+   No timezone given = Malaysia time (+08:00). Returns NaN if it really can't tell. */
+function parseMatchTime(value) {
+  let s = String(value || "").trim().replace(/\s*T\s*/i, "T").replace(/^(\d{4}-\d{2}-\d{2})\s+(\d)/, "$1T$2");
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) s += "T00:00:00";
+  if (/T\d{2}:\d{2}$/.test(s)) s += ":00";
+  if (/T[\d:]+$/.test(s)) s += "+08:00";
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?([+-]\d{2}:\d{2}|Z)$/.test(s)) return NaN;
+  return Date.parse(s);
+}
+
 function renderNext() {
   const box = $("next"), hero = box.parentElement;
   const hide = () => { box.hidden = true; hero.classList.add("solo"); return false; };
   if (!nextMatch) return hide();
-  const now = Date.now(), start = Date.parse(nextMatch.start), end = Date.parse(nextMatch.end);
+  const now = Date.now(), start = parseMatchTime(nextMatch.start), end = parseMatchTime(nextMatch.end);
+  if (isNaN(start) || isNaN(end)) {
+    console.warn("next-match.json: can't read start/end. Use the format 2026-11-14T09:00:00+08:00");
+    return hide();
+  }
   if (now > end) return hide();
   const live = now >= start, ms = Math.max(0, start - now);
   const parts = [ms / 864e5, ms / 36e5 % 24, ms / 6e4 % 60, ms / 1e3 % 60].map(n => pad(Math.floor(n)));
@@ -298,7 +315,7 @@ function buildChrome(page) {
     <div class="foot">
       <span class="logo">T4R0T<span>_</span></span>
       <span>© ${new Date().getFullYear()} T4R0T · BUILT BY AMCAQT</span>
-      <span class="hint">press <kbd>\`</kbd></span>
+      <span class="hint"><a href="flag.html">SUBMIT FLAG</a> · press <kbd>\`</kbd></span>
     </div>
   </footer>
   <div class="term" id="term" aria-hidden="true">
@@ -333,6 +350,64 @@ function renderTiles(c) {
       <p>${desc}</p>
       <span class="go">ENTER →</span>
     </a>`).join("");
+}
+
+/* =========================================================
+   FLAG CHECK
+   Only the SHA-256 of the flag lives here, never the flag itself.
+   ========================================================= */
+const FLAG_HASH = "f332f3816397a31ca858f44cec6d68933babd2d5e0b74d97e49cf0c820083e01";
+const SOLVED_KEY = "t4r0t-flag-solved";
+
+async function sha256(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+async function checkFlag(input) {
+  if (!window.crypto?.subtle) throw new Error("no crypto");   // only missing on plain http
+  return (await sha256(String(input).trim())) === FLAG_HASH;
+}
+const markSolved = () => { try { localStorage.setItem(SOLVED_KEY, new Date().toISOString()); } catch {} };
+const solvedAt = () => { try { return localStorage.getItem(SOLVED_KEY); } catch { return null; } };
+
+function initFlagPage() {
+  const form = $("flagForm"), input = $("flagInput"), msg = $("flagMsg"), box = $("flagBox"), win = $("flagWin");
+  let tries = 0;
+
+  const showWin = when => {
+    box.hidden = true; win.hidden = false;
+    $("winTime").textContent = new Date(when).toLocaleString("en-MY", { dateStyle: "medium", timeStyle: "short" });
+    win.classList.remove("boom"); void win.offsetWidth; win.classList.add("boom");
+  };
+  const prev = solvedAt();
+  if (prev) showWin(prev);
+
+  input.addEventListener("input", () => { msg.textContent = ""; msg.className = "flag-msg"; });
+
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const value = input.value.trim();
+    if (!value) { msg.textContent = "Type a flag first."; msg.className = "flag-msg bad"; return; }
+    if (!/^T4R0T\{.+\}$/.test(value)) {
+      msg.textContent = "That's not even flag-shaped. Format is T4R0T{...}";
+      msg.className = "flag-msg bad"; shake(); return;
+    }
+    try {
+      if (await checkFlag(value)) { markSolved(); showWin(new Date().toISOString()); return; }
+    } catch {
+      msg.textContent = "Your browser can't check flags here. Try the https site.";
+      msg.className = "flag-msg bad"; return;
+    }
+    tries++;
+    msg.textContent = tries < 3 ? "Nope. Not the flag." : `Nope. ${tries} tries in. Hint: every hacker starts with the source.`;
+    msg.className = "flag-msg bad"; shake();
+  });
+
+  function shake() { box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake"); }
+  $("flagAgain").addEventListener("click", () => {
+    try { localStorage.removeItem(SOLVED_KEY); } catch {}
+    win.hidden = true; box.hidden = false; input.value = ""; input.focus();
+  });
 }
 
 /* =========================================================
@@ -373,7 +448,7 @@ function initTerminal(state) {
   document.querySelector(".hint").addEventListener("click", toggle);
 
   const cmds = {
-    help: () => "whoami · ls members · cat motto · stats · next · font [e|f|g] · clear · exit",
+    help: () => "whoami · ls members · cat motto · stats · next · font [e|f|g] · submit <flag> · clear · exit",
     whoami: () => "T4R0T, CTF team, TVETMARA Petaling Jaya, Malaysia. est. 2025",
     "ls members": () => state.members.map(m => m.handle).join("  "),
     "cat motto": () => "Hack To Learn, Not Learn to Hack",
@@ -384,13 +459,24 @@ function initTerminal(state) {
       return setFont(arg) ? `font set ${arg}: ${FONT_SETS[arg].name}` : `unknown font "${arg}". try e, f or g`;
     }
   };
-  cmd.addEventListener("keydown", e => {
+  cmd.addEventListener("keydown", async e => {
     if (e.key !== "Enter") return;
     const input = cmd.value.trim(); cmd.value = "";
     if (!input) return;
     if (input === "clear") { out.innerHTML = ""; return; }
     if (input === "exit") { toggle(); return; }
     const [word, ...rest] = input.split(/\s+/);
+    if (word === "submit") {
+      const guess = rest.join(" ");
+      let reply = "usage: submit T4R0T{...}";
+      if (guess) {
+        try { reply = await checkFlag(guess) ? (markSolved(), "FLAG ACCEPTED. you're one of us now. screenshot this, DM amca._. on Discord") : "nope. not the flag."; }
+        catch { reply = "can't check flags on this connection, try the https site"; }
+      }
+      out.innerHTML += `<span class="c">$ submit ${esc(guess)}</span><br>${esc(reply)}<br>`;
+      out.scrollTop = out.scrollHeight;
+      return;
+    }
     const fn = cmds[input] || (word === "font" ? () => cmds.font(rest[0]) : null);
     out.innerHTML += `<span class="c">$ ${esc(input)}</span><br>${esc(fn ? fn() : "command not found: " + input)}<br>`;
     out.scrollTop = out.scrollHeight;
@@ -405,6 +491,7 @@ function initTerminal(state) {
   const page = document.body.dataset.page;
   buildChrome(page);
   if (page === "contact") renderContact();
+  if (page === "flag") initFlagPage();
 
   const state = { members: [], events: 0, best: "—", writeups: null };
   const [members, achievements, next] = await Promise.all([

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Submit Flag | T4R0T</title>
+<meta name="description" content="Found the hidden flag on the T4R0T site? Submit it here.">
+<meta name="theme-color" content="#070708">
+<link rel="canonical" href="https://t4r0t-team.github.io/flag.html">
+<meta property="og:url" content="https://t4r0t-team.github.io/flag.html">
+<meta property="og:site_name" content="T4R0T">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Submit Flag | T4R0T">
+<meta property="og:description" content="There is a flag hidden on this site. Find it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23070708'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Impact,sans-serif' font-size='44' fill='%2300ffff'%3ET%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Chakra+Petch:wght@500;700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="flag">
+<div id="chrome-top"></div>
+<main>
+<section class="wrap section first">
+  <div class="drop">DROP ??? // CAPTURE</div>
+  <h1 class="title">SUBMIT <span class="out">THE</span> <span class="cy">FLAG</span></h1>
+  <p class="lede" style="margin-top:20px">There's a flag hidden somewhere on this site. Found it? Prove it.</p>
+
+  <div class="flag-wrap">
+    <div class="flag-box" id="flagBox">
+      <div class="flag-hd"><span>// SUBMISSION TERMINAL</span><span class="flag-fmt">FORMAT: T4R0T{...}</span></div>
+      <form id="flagForm" autocomplete="off" novalidate>
+        <label class="sr" for="flagInput">Flag</label>
+        <div class="flag-row">
+          <span class="flag-prompt">$</span>
+          <input id="flagInput" class="flag-input" placeholder="T4R0T{...}" spellcheck="false" autocapitalize="off">
+          <button class="btn pri cut flag-btn" type="submit">SUBMIT</button>
+        </div>
+        <div class="flag-msg" id="flagMsg" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <div class="flag-win" id="flagWin" hidden>
+      <div class="ribbon">PWNED</div>
+      <div class="win-k">// FLAG ACCEPTED</div>
+      <div class="win-big">CAPTURED</div>
+      <p class="win-p">You found it. Respect. Screenshot this and DM <b>amca._.</b> on Discord to get on the Hall of Fame.</p>
+      <div class="win-meta"><span>SOLVED</span><span id="winTime"></span></div>
+      <button class="btn sec cut" id="flagAgain" type="button">RESET</button>
+    </div>
+
+    <aside class="flag-rules">
+      <div class="hd">// RULES</div>
+      <ol>
+        <li>Everything you need is on this site.</li>
+        <li>No brute forcing. No attacking GitHub. Just look closer.</li>
+        <li>Flags are case sensitive.</li>
+        <li>Don't spoil it for others. Writeups are cool after you've been on the Hall of Fame.</li>
+      </ol>
+    </aside>
+  </div>
+</section>
+</main>
+<div id="chrome-bottom"></div>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

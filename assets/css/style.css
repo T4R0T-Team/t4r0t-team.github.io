@@ -303,3 +303,49 @@ main{min-height:calc(100vh - 200px)}
   .pager .btn{width:100%;text-align:center}
 }
 .paths{padding-top:8px}
+
+/* =================== FLAG PAGE =================== */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.hint a{color:var(--muted);transition:color .15s}
+.hint a:hover{color:var(--cyan)}
+.flag-wrap{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px;margin-top:40px;align-items:start}
+.flag-box,.flag-win{position:relative;border:1px solid var(--line);background:var(--stripe);overflow:hidden}
+.flag-box::before,.flag-win::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--cyan)}
+.flag-win::before{background:var(--green)}
+.flag-hd{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 24px;border-bottom:1px solid var(--line);font-family:var(--label);font-size:12px;letter-spacing:3px;color:var(--cyan)}
+.flag-fmt{color:var(--muted)}
+#flagForm{padding:28px 24px}
+.flag-row{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#050507;padding:6px 6px 6px 16px;transition:border-color .2s}
+.flag-row:focus-within{border-color:var(--cyan)}
+.flag-prompt{font-family:var(--mono);color:var(--cyan);font-size:18px}
+.flag-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--ink);font-family:var(--mono);font-size:18px;padding:12px 0}
+.flag-input::placeholder{color:var(--dim)}
+.flag-btn{padding:14px 22px}
+.flag-msg{min-height:22px;margin-top:14px;font-family:var(--label);font-size:12px;letter-spacing:2px;text-transform:uppercase}
+.flag-msg.bad{color:var(--red)}
+.flag-box.shake{animation:shake .35s}
+@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+.flag-win{padding:28px 24px 26px}
+.win-k{font-family:var(--label);font-size:12px;letter-spacing:3px;color:var(--green)}
+.win-big{font-family:var(--display);font-size:clamp(64px,10vw,120px);line-height:.9;margin-top:12px;color:var(--green);letter-spacing:var(--display-track)}
+.flag-win.boom .win-big{animation:glitch .5s steps(2) 3}
+.flag-win.boom{animation:flash .6s}
+@keyframes flash{0%{background:#3dffa833}100%{background:transparent}}
+.win-p{font-size:16px;line-height:1.6;color:var(--soft);margin-top:14px;max-width:520px}
+.win-p b{color:var(--cyan);font-family:var(--mono);font-weight:400}
+.win-meta{display:flex;gap:14px;margin:22px 0;font-family:var(--label);font-size:11px;letter-spacing:2px;color:var(--muted)}
+.win-meta span:last-child{color:var(--ink)}
+.flag-win .ribbon{background:var(--green)}
+
+.flag-rules{border:1px solid var(--line)}
+.flag-rules .hd{font-family:var(--label);font-size:12px;letter-spacing:3px;color:var(--mag);padding:16px 22px;border-bottom:1px solid var(--line)}
+.flag-rules ol{padding:18px 22px 18px 42px;display:grid;gap:12px;font-size:14px;line-height:1.55;color:var(--soft)}
+.flag-rules li::marker{color:var(--mag);font-family:var(--label)}
+
+@media (max-width:900px){ .flag-wrap{grid-template-columns:1fr} }
+@media (max-width:520px){
+  .flag-row{flex-wrap:wrap;padding:6px 12px}
+  .flag-input{font-size:16px}
+  .flag-btn{width:100%;text-align:center}
+}
