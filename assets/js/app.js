@@ -1,6 +1,6 @@
 /* =========================================================
-   T4R0T team site
-   Data lives in /data. Writeups come live from the blog.
+    T4R0T team site
+    Data lives in /data. Writeups come live from the blog.
    ========================================================= */
 
 const CONFIG = {
@@ -30,7 +30,7 @@ async function getJSON(url) {
 }
 
 /* =========================================================
-   ROSTER
+    ROSTER
    ========================================================= */
 const SPECIALTY_LANE = [
   [/forensic/i, "for"], [/reverse|binary|pwn/i, "rev"], [/ai|data|machine/i, "ai"],
@@ -59,7 +59,7 @@ function renderRoster(members) {
 }
 
 /* =========================================================
-   RECORD
+    RECORD
    ========================================================= */
 const isSolo = a => a.type === "solo";
 const tier = a => a.rank === 1 ? "gold" : (a.rank && a.rank <= 3 ? "pod" : "");
@@ -103,7 +103,7 @@ function renderRecord(list) {
 }
 
 /* =========================================================
-   WRITEUPS (live from Chirpy)
+    WRITEUPS (live from Chirpy)
    ========================================================= */
 const RESEARCH = [["vuln", "Vulnerability Analysis", /vulnerability/i], ["threat", "Threat Analysis", /threat/i]];
 const LANES = [
@@ -211,7 +211,7 @@ function vaultFailed() {
 }
 
 /* =========================================================
-   HERO
+    HERO STATS
    ========================================================= */
 function renderHeroStats({ players, events, best, writeups }) {
   $("heroStats").innerHTML = [
@@ -222,7 +222,7 @@ function renderHeroStats({ players, events, best, writeups }) {
 let nextMatch = null;
 
 /* Forgiving date reader for next-match.json.
-   Accepts "2026-11-14T09:00:00+08:00", "2026-11-14 T 09:00", "2026-11-14 09:00", "2026-11-14".
+    Accepts "2026-11-14T09:00:00+08:00", "2026-11-14 T 09:00", "2026-11-14 09:00", "2026-11-14".
    No timezone given = Malaysia time (+08:00). Returns NaN if it really can't tell. */
 function parseMatchTime(value) {
   let s = String(value || "").trim().replace(/\s*T\s*/i, "T").replace(/^(\d{4}-\d{2}-\d{2})\s+(\d)/, "$1T$2");
@@ -256,7 +256,7 @@ function renderNext() {
 }
 
 /* =========================================================
-   CONTACT
+    CONTACT
    ========================================================= */
 const email = () => `${CONFIG.email.user}@${CONFIG.email.host.join(".")}`;
 
@@ -288,8 +288,8 @@ function renderContact() {
 }
 
 /* =========================================================
-   SHARED CHROME (nav, footer, terminal)
-   Written once here so every page stays in sync.
+    SHARED CHROME (nav, footer, terminal)
+    Written once here so every page stays in sync.
    ========================================================= */
 const PAGES = [
   ["about", "about.html", "00", "ABOUT"],
@@ -332,7 +332,7 @@ function buildChrome(page) {
 }
 
 /* =========================================================
-   HOME: PICK YOUR PATH
+    HOME: PICK YOUR PATH
    ========================================================= */
 function renderTiles(c) {
   const tiles = [
@@ -353,11 +353,10 @@ function renderTiles(c) {
 }
 
 /* =========================================================
-   FLAG CHECK
-   Only the SHA-256 of the flag lives here, never the flag itself.
+    FLAG CHECK
+    Only the SHA-256 of the flag lives here, never the flag itself.
    ========================================================= */
 const FLAG_HASH = "f332f3816397a31ca858f44cec6d68933babd2d5e0b74d97e49cf0c820083e01";
-const SOLVED_KEY = "t4r0t-flag-solved";
 
 async function sha256(text) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
@@ -367,8 +366,6 @@ async function checkFlag(input) {
   if (!window.crypto?.subtle) throw new Error("no crypto");   // only missing on plain http
   return (await sha256(String(input).trim())) === FLAG_HASH;
 }
-const markSolved = () => { try { localStorage.setItem(SOLVED_KEY, new Date().toISOString()); } catch {} };
-const solvedAt = () => { try { return localStorage.getItem(SOLVED_KEY); } catch { return null; } };
 
 function initFlagPage() {
   const form = $("flagForm"), input = $("flagInput"), msg = $("flagMsg"), box = $("flagBox"), win = $("flagWin");
@@ -379,9 +376,6 @@ function initFlagPage() {
     $("winTime").textContent = new Date(when).toLocaleString("en-MY", { dateStyle: "medium", timeStyle: "short" });
     win.classList.remove("boom"); void win.offsetWidth; win.classList.add("boom");
   };
-  const prev = solvedAt();
-  if (prev) showWin(prev);
-
   input.addEventListener("input", () => { msg.textContent = ""; msg.className = "flag-msg"; });
 
   form.addEventListener("submit", async e => {
@@ -393,7 +387,7 @@ function initFlagPage() {
       msg.className = "flag-msg bad"; shake(); return;
     }
     try {
-      if (await checkFlag(value)) { markSolved(); showWin(new Date().toISOString()); return; }
+      if (await checkFlag(value)) { showWin(new Date().toISOString()); return; }
     } catch {
       msg.textContent = "Your browser can't check flags here. Try the https site.";
       msg.className = "flag-msg bad"; return;
@@ -405,13 +399,12 @@ function initFlagPage() {
 
   function shake() { box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake"); }
   $("flagAgain").addEventListener("click", () => {
-    try { localStorage.removeItem(SOLVED_KEY); } catch {}
     win.hidden = true; box.hidden = false; input.value = ""; input.focus();
   });
 }
 
 /* =========================================================
-   TERMINAL EASTER EGG
+    
    ========================================================= */
 const FONT_SETS = {
   e: { name: "poster HUD (default)", load: null },
@@ -470,7 +463,7 @@ function initTerminal(state) {
       const guess = rest.join(" ");
       let reply = "usage: submit T4R0T{...}";
       if (guess) {
-        try { reply = await checkFlag(guess) ? (markSolved(), "FLAG ACCEPTED. you're one of us now. screenshot this, DM amca._. on Discord") : "nope. not the flag."; }
+        try { reply = await checkFlag(guess) ? ("FLAG ACCEPTED. you're one of us now. screenshot this, DM amca._. on Discord") : "nope. not the flag."; }
         catch { reply = "can't check flags on this connection, try the https site"; }
       }
       out.innerHTML += `<span class="c">$ submit ${esc(guess)}</span><br>${esc(reply)}<br>`;
@@ -484,8 +477,8 @@ function initTerminal(state) {
 }
 
 /* =========================================================
-   BOOT
-   Each page only renders what it has room for.
+    BOOT
+    Each page only renders what it has room for.
    ========================================================= */
 (async function boot() {
   const page = document.body.dataset.page;
