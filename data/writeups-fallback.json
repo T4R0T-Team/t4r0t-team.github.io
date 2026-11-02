@@ -1,0 +1,146 @@
+[
+    {
+    "title": "PHP2Shell Part 2: Build the Lab  - Practical",
+    "url": "/posts/php2shell-part-2/",
+    "categories": "Security, Vulnerability Analysis",
+    "tags": "php, php2shell, cve-2026-109618, cve-2026-109619, rce, use-after-free, docker, wordpress, lab",
+    "date": "2026-10-25",
+    "snippet": "Part 2 of the PHP2Shell series. We stand up our own vulnerable WordPress box on PHP 8.4.26 with Docker, then walk the exploit chain stage by stage: the trigger, the dangling pointer, the memory leak, and the RCE. Lab-only, built to understand."
+    },
+    {
+    "title": "PHP2Shell Part 1: Understanding the Vuln - 'Theory'",
+    "url": "/posts/php2shell-part-1/",
+    "categories": "Security, Vulnerability Analysis",
+    "tags": "php, php2shell, cve-2026-109618, cve-2026-109619, rce, use-after-free, opcache, web-security",
+    "date": "2026-10-23",
+    "snippet": "Part 1 of a 2-part series breaking down PHP2Shell (CVE-2026-109618 & CVE-2026-109619), the pair of critical PHP core RCE bugs patched on 21 Oct 2026. This part is all theory. Part 2 we pop it in a lab."
+    },
+    {
+    "title": "Fake LHDN 'Notis Tuntutan Cukai' Is Back, and This Time It Drops Malware",
+    "url": "/posts/lhdn-notis-tuntutan-cukai-malware/",
+    "categories": "Threat Analysis, Phishing, Trojan",
+    "tags": "LHDN, phishing, malware, dll-sideloading, malaysia, social-engineering, ioc",
+    "date": "2026-10-15",
+    "snippet": ""
+    },
+    {
+    "title": "HackDev - Intro to CTF Writeup",
+    "url": "/posts/hackdev-intro-to-ctf-writeup/",
+    "categories": "HackDev",
+    "tags": "Intro to CTF",
+    "date": "2026-08-31",
+    "snippet": ""
+    },
+    {
+    "title": "Liga CTF 2026: The Artisan Ledger - Monument OSINT",
+    "url": "/posts/liga-ctf-artisan/",
+    "categories": "Liga CTF 2026",
+    "tags": "OSINT, image search, monument, Roman numerals, geolocation",
+    "date": "2026-06-12",
+    "snippet": ""
+    },
+    {
+    "title": "Liga CTF 2026: Forensics & OSINT - 100pt Challenges",
+    "url": "/posts/liga-ctf-100pt-chall/",
+    "categories": "CTF, Forensics, OSINT",
+    "tags": "Liga CTF 2026, Week 3, Forensics, OSINT, image metadata, location analysis, video metadata",
+    "date": "2026-06-12",
+    "snippet": ""
+    },
+    {
+    "title": "Liga CTF 2026: The Ghost in the Logs",
+    "url": "/posts/liga-ctf-the-ghost-in-the-logs/",
+    "categories": "Liga CTF 2026",
+    "tags": "forensics, windows, evtx, powershell, base64, log analysis",
+    "date": "2026-06-07",
+    "snippet": ""
+    },
+    {
+    "title": "Liga CTF 2026: Boot2Root - GGEZAF",
+    "url": "/posts/liga-ctf-ggezaf/",
+    "categories": "Liga CTF 2026",
+    "tags": "Boot2Root, FTP, SSH, privilege escalation, enumeration",
+    "date": "2026-05-30",
+    "snippet": ""
+    },
+    {
+    "title": "Liga CTF 2026: Unpackme Series",
+    "url": "/posts/liga-ctf-unpackme_series/",
+    "categories": "Liga CTF 2026",
+    "tags": "reverse engineering, binary, packer, UPX, ASPack, anti-unpack",
+    "date": "2026-05-24",
+    "snippet": ""
+    },
+    {
+    "title": "Liga CTF 2026: Lockbox",
+    "url": "/posts/liga-ctf-lockbox/",
+    "categories": "OWASPKL - Liga CTF 2026",
+    "tags": "reverse engineering, binary, ltrace, strcmp",
+    "date": "2026-05-24",
+    "snippet": ""
+    },
+    {
+    "title": "Liga CTF 2026: Find the C2 Server",
+    "url": "/posts/liga-ctf-c2_server/",
+    "categories": "OWASPKL- Liga CTF 2026",
+    "tags": "reverse engineering, android, APK, jadx, C2, malware analysis",
+    "date": "2026-05-24",
+    "snippet": ""
+    },
+    {
+    "title": "TryHackMe: Library",
+    "url": "/posts/tryhackme-library/",
+    "categories": "TryHackMe",
+    "tags": "web, Enumaration, Boot2Root",
+    "date": "2025-11-24",
+    "snippet": ""
+    },
+    {
+    "title": "Competition Registration System",
+    "url": "/posts/competition-registration-system/",
+    "categories": "Project",
+    "tags": "Project, KKTM PJ, Coding",
+    "date": "2025-07-15",
+    "snippet": ""
+    },
+    {
+    "title": "TryHackMe: Lofi",
+    "url": "/posts/tryhackme-lofi/",
+    "categories": "TryHackMe",
+    "tags": "Web, Enumeration, LFI",
+    "date": "2024-09-16",
+    "snippet": ""
+    },
+    {
+    "title": "TryHackMe: Takeover",
+    "url": "/posts/tryhackme-takeover/",
+    "categories": "TryHackMe",
+    "tags": "Web, Enumeration, Subdomain, Subdomain takeover",
+    "date": "2024-09-16",
+    "snippet": ""
+    },
+    {
+    "title": "TryHackMe: TryHack3M: Bricks Heist",
+    "url": "/posts/tryhackme-bricks-heist/",
+    "categories": "TryHackMe",
+    "tags": "Web, Enumeration, RCE",
+    "date": "2024-09-05",
+    "snippet": ""
+    },
+    {
+    "title": "TryHackMe: Cheese CTF",
+    "url": "/posts/tryhackme-cheese-ctf/",
+    "categories": "TryHackMe",
+    "tags": "Web, Enumeration, RCE, LFI, Privilege Escalation",
+    "date": "2024-09-16",
+    "snippet": ""
+    },
+    {
+    "title": "TryHackMe: Publisher",
+    "url": "/posts/tryhackme-publisher/",
+    "categories": "TryHackMe",
+    "tags": "web, enumeration, rce, Boot2Root, Directory Fuzzing, Privilege Escalation",
+    "date": "2024-09-10",
+    "snippet": ""
+    }
+]

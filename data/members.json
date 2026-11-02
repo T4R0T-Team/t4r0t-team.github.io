@@ -1,0 +1,38 @@
+[
+  {
+    "handle": "AmcaQt",
+    "role": "Leader",
+    "specialty": ["Web", "OSINT", "Recon", "IoT"],
+    "tagline": "Nothing is safe. Anything can be hacked, even your life.",
+    "avatar": "",
+    "links": {
+      "github": "https://github.com/AmcaQt",
+      "ctftime": "",
+      "linkedin": "https://linkedin.com/in/fahim-amsyar"
+    }
+  },
+  {
+    "handle": "Wan Ash",
+    "role": "Member",
+    "specialty": ["Digital Forensics"],
+    "tagline": "Imma do crack while cracking this code.",
+    "avatar": "",
+    "links": {}
+  },
+  {
+    "handle": "Uzair.Znl",
+    "role": "Member",
+    "specialty": ["AI", "Data Science"],
+    "tagline": "Sometimes machines have more common sense than people.",
+    "avatar": "",
+    "links": {}
+  },
+  {
+    "handle": "Kryy",
+    "role": "Member",
+    "specialty": ["Reverse Engineering"],
+    "tagline": "Give me the binary, I'll give you the source.",
+    "avatar": "",
+    "links": {}
+  }
+]

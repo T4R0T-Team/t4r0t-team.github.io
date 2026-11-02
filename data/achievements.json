@@ -1,0 +1,81 @@
+[
+  {
+    "event": "HackDev Mini CTF",
+    "platform": "HackDev",
+    "date": "2026-08",
+    "rank": 2,
+    "rankLabel": null,
+    "teams": null,
+    "duration": null,
+    "highlight": true,
+    "type": "solo",
+    "player": "AmcaQt",
+    "link": "https://amcaqt.github.io/posts/hackdev-intro-to-ctf-writeup/"
+  },
+  {
+    "event": "iHack CTF 2026",
+    "platform": "Local",
+    "date": "2026-10",
+    "rank": 5,
+    "rankLabel": null,
+    "teams": null,
+    "duration": null,
+    "highlight": true,
+    "link": ""
+  },
+  {
+    "event": "3108 CTF 2026: Warisan Takhta",
+    "platform": "Local",
+    "date": "2026-08",
+    "rank": null,
+    "rankLabel": "PLAYED",
+    "teams": null,
+    "duration": "24h",
+    "highlight": false,
+    "link": ""
+  },
+  {
+    "event": "World Wide CTF 2025",
+    "platform": "CTFtime",
+    "date": "2025-07",
+    "rank": 10,
+    "rankLabel": null,
+    "teams": null,
+    "duration": "48h",
+    "highlight": false,
+    "link": ""
+  },
+  {
+    "event": "No Hack No CTF 2024",
+    "platform": "CTFtime",
+    "date": "2024-11",
+    "rank": null,
+    "rankLabel": "PLAYED",
+    "teams": null,
+    "duration": "48h",
+    "highlight": false,
+    "link": ""
+  },
+  {
+    "event": "3108 CTF 2024: Kembara Tuah",
+    "platform": "Local",
+    "date": "2024-11",
+    "rank": null,
+    "rankLabel": null,
+    "teams": null,
+    "duration": "24h",
+    "highlight": false,
+    "link": ""
+  },
+  {
+    "event": "TCP1P International CTF 2024",
+    "platform": "CTFtime",
+    "date": "2024-10",
+    "rank": 142,
+    "rankLabel": null,
+    "teams": null,
+    "duration": "24h",
+    "highlight": false,
+    "link": ""
+  }
+]
