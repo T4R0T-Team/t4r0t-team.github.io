@@ -13,7 +13,7 @@
   },
   {
     "handle": "Wan Ash",
-    "role": "Member",
+    "role": "Challenge Creator",
     "specialty": ["Digital Forensics"],
     "tagline": "Imma do crack while cracking this code.",
     "avatar": "",
@@ -28,11 +28,23 @@
     "links": {}
   },
   {
-    "handle": "Kryy",
+    "handle": "kry0xqt",
     "role": "Member",
     "specialty": ["Reverse Engineering"],
     "tagline": "Give me the binary, I'll give you the source.",
     "avatar": "",
-    "links": {}
+    "links": {
+      "github": "https://github.com/kry0xqt"
+    }
+  },
+  {
+    "handle": "UkiddGj",
+    "role": "Member",
+    "specialty": ["AI", "Forensics", "Cryptography"],
+    "tagline": "I don't always test my code, but when I do, I do it in production.",
+    "avatar": "",
+    "links": {
+      "github": "https://github.com/ukiddnagata"
+    }
   }
 ]

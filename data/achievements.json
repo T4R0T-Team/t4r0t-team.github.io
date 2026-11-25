@@ -77,5 +77,27 @@
     "duration": "24h",
     "highlight": false,
     "link": ""
+  },
+  {
+    "event": "InIt CTF",
+    "platform": "CTFtime",
+    "date": "2026-11",
+    "rank": 32,
+    "rankLabel": null,
+    "teams": null,
+    "duration": "24h",
+    "highlight": false,
+    "link": ""
+  },
+  {
+    "event": "Outback Overflow",
+    "platform": "CTFtime",
+    "date": "2026-11",
+    "rank": 68,
+    "rankLabel": null,
+    "teams": null,
+    "duration": "24h",
+    "highlight": false,
+    "link": ""
   }
 ]
