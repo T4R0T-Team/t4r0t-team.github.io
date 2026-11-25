@@ -430,7 +430,7 @@ main{min-height:calc(100vh - 200px)}
   .pdf-link{margin-left:0}
   .wu-foot .btn{width:100%;text-align:center}
 }
-.prose .flagbox code{background:none;border:0;padding:0}
+.prose .flagbox code{background:none;border:0;padding:0;color:var(--green)}
 
 /* member colours */
 .who{color:var(--who);font-weight:700}
@@ -439,3 +439,17 @@ main{min-height:calc(100vh - 200px)}
 .frow[data-kind=author] button[style].on span{color:#000;opacity:.55}
 .by-link{border-color:var(--who,var(--cyan));color:var(--who,var(--cyan))}
 .by-link:hover{background:var(--who,var(--cyan));color:#000}
+
+/* filter dropdowns (phones only) */
+.fsel{display:none}
+.fsel label{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fsel label span{font-family:var(--label);font-size:10px;letter-spacing:3px;color:var(--dim)}
+.fsel select{appearance:none;-webkit-appearance:none;width:100%;background:#0b0b0e url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2300ffff' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center;border:1px solid var(--line);color:var(--ink);font-family:var(--label);font-size:12px;letter-spacing:2px;padding:12px 34px 12px 12px;border-radius:0}
+.fsel select:focus{outline:none;border-color:var(--cyan)}
+.fsel label[style*="--who"] select{color:var(--who);border-color:var(--who)}
+.fsel option{background:#0b0b0e;color:var(--ink)}
+@media (max-width:700px){
+  .frow{display:none}
+  .fsel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+}
+.chip.pts{color:var(--ink);border-color:#ffffff33}

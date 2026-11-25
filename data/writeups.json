@@ -147,5 +147,454 @@
     "status": "partial",
     "file": "writeups/kryy/init-not-so-soon.md",
     "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  },
+  {
+    "id": "init-second",
+    "title": "InIt CTF: Second",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Web",
+      "SQL Injection",
+      "MySQL"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-second.md",
+    "points": 100
+  },
+  {
+    "id": "init-deleted-evidence",
+    "title": "InIt CTF: Deleted Evidence",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Forensics",
+      "NTFS",
+      "ROT13"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-deleted-evidence.md",
+    "points": 100
+  },
+  {
+    "id": "init-locked-notes",
+    "title": "InIt CTF: Locked Notes",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Forensics",
+      "Android",
+      "SQLite"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-locked-notes.md",
+    "points": 100
+  },
+  {
+    "id": "init-ec2-dropper",
+    "title": "InIt CTF: ec2-dropper",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Forensics",
+      "AES",
+      "Cloud"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-ec2-dropper.md",
+    "points": 200
+  },
+  {
+    "id": "init-packet-capture",
+    "title": "InIt CTF: Packet Capture Investigation",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Forensics",
+      "PCAP",
+      "HTTP"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-packet-capture.md"
+  },
+  {
+    "id": "init-trolls-ticket",
+    "title": "InIt CTF: The Troll's Ticket",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Forensics",
+      "Archives",
+      "File Signatures"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-trolls-ticket.md",
+    "points": 200
+  },
+  {
+    "id": "init-beepy",
+    "title": "InIt CTF: Beepy",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Forensics",
+      "Audio",
+      "Morse"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-beepy.md",
+    "points": 100
+  },
+  {
+    "id": "init-camera-lost-found",
+    "title": "InIt CTF: Camera Lost & Found",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Forensics",
+      "EXIF",
+      "Base64"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-camera-lost-found.md",
+    "points": 100
+  },
+  {
+    "id": "init-super-blind",
+    "title": "InIt CTF: Super Blind",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Web",
+      "Blind SQLi",
+      "SQLite"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-super-blind.md",
+    "points": 200
+  },
+  {
+    "id": "init-last-announcement",
+    "title": "InIt CTF: The Last Announcement",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Forensics",
+      "Audio",
+      "Spectrogram"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-last-announcement.md",
+    "points": 200
+  },
+  {
+    "id": "init-weird-sound",
+    "title": "InIt CTF: Weird Sound",
+    "author": "UkiddGj",
+    "date": "2026-11-15",
+    "tags": [
+      "Forensics",
+      "Audio",
+      "Spectrogram"
+    ],
+    "status": "solved",
+    "file": "writeups/ukiddgj/init-weird-sound.md",
+    "points": 100
+  },
+  {
+    "id": "oo-the-onion",
+    "title": "Outback Overflow: The Onion",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Crypto",
+      "Encoding",
+      "Python"
+    ],
+    "status": "solved",
+    "points": 300,
+    "file": "writeups/ukiddgj/oo-the-onion.md"
+  },
+  {
+    "id": "oo-sardines",
+    "title": "Outback Overflow: Sardines",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "Steganography",
+      "ZIP"
+    ],
+    "status": "solved",
+    "points": 200,
+    "file": "writeups/ukiddgj/oo-sardines.md"
+  },
+  {
+    "id": "oo-the-keeper-s-ledger",
+    "title": "Outback Overflow: The Keeper's Ledger",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "Steganography",
+      "Whitespace"
+    ],
+    "status": "solved",
+    "points": 200,
+    "file": "writeups/ukiddgj/oo-the-keeper-s-ledger.md"
+  },
+  {
+    "id": "oo-echoes-in-the-static",
+    "title": "Outback Overflow: Echoes in the Static",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "Audio",
+      "LSB"
+    ],
+    "status": "solved",
+    "points": 100,
+    "file": "writeups/ukiddgj/oo-echoes-in-the-static.md"
+  },
+  {
+    "id": "oo-postcard-from-nowhere",
+    "title": "Outback Overflow: Postcard From Nowhere",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "EXIF"
+    ],
+    "status": "solved",
+    "points": 100,
+    "file": "writeups/ukiddgj/oo-postcard-from-nowhere.md"
+  },
+  {
+    "id": "oo-nothing-to-see-here",
+    "title": "Outback Overflow: Nothing To See Here",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "Steganography",
+      "Bit Planes"
+    ],
+    "status": "solved",
+    "points": 100,
+    "file": "writeups/ukiddgj/oo-nothing-to-see-here.md"
+  },
+  {
+    "id": "oo-broken-memories",
+    "title": "Outback Overflow: Broken Memories",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "PNG Repair"
+    ],
+    "status": "solved",
+    "points": 100,
+    "file": "writeups/ukiddgj/oo-broken-memories.md"
+  },
+  {
+    "id": "oo-spinning-state",
+    "title": "Outback Overflow: Spinning State",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Reverse Engineering",
+      "LLVM IR"
+    ],
+    "status": "solved",
+    "points": 200,
+    "file": "writeups/ukiddgj/oo-spinning-state.md"
+  },
+  {
+    "id": "oo-rotate-and-hide",
+    "title": "Outback Overflow: Rotate and Hide",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Reverse Engineering",
+      "Go",
+      "XOR"
+    ],
+    "status": "solved",
+    "points": 100,
+    "file": "writeups/ukiddgj/oo-rotate-and-hide.md"
+  },
+  {
+    "id": "oo-disgruntleddev-i",
+    "title": "Outback Overflow: DisgruntledDev I",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "PCAP",
+      "FTP"
+    ],
+    "status": "solved",
+    "points": 100,
+    "file": "writeups/ukiddgj/oo-disgruntleddev-i.md"
+  },
+  {
+    "id": "oo-disgruntleddev-ii",
+    "title": "Outback Overflow: DisgruntledDev II",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "PCAP",
+      "DNS Tunneling"
+    ],
+    "status": "solved",
+    "points": 50,
+    "file": "writeups/ukiddgj/oo-disgruntleddev-ii.md"
+  },
+  {
+    "id": "oo-disgruntleddev-iii",
+    "title": "Outback Overflow: DisgruntledDev III",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "PCAP",
+      "ICMP"
+    ],
+    "status": "solved",
+    "points": 75,
+    "file": "writeups/ukiddgj/oo-disgruntleddev-iii.md"
+  },
+  {
+    "id": "oo-disgruntleddev-iv",
+    "title": "Outback Overflow: DisgruntledDev IV",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "PCAP",
+      "Covert Channel"
+    ],
+    "status": "solved",
+    "points": 100,
+    "file": "writeups/ukiddgj/oo-disgruntleddev-iv.md"
+  },
+  {
+    "id": "oo-hidden-in-the-streams",
+    "title": "Outback Overflow: Hidden In The Streams",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "NTFS",
+      "SSTV"
+    ],
+    "status": "solved",
+    "points": 50,
+    "file": "writeups/ukiddgj/oo-hidden-in-the-streams.md"
+  },
+  {
+    "id": "oo-hidden-in-the-streams-2",
+    "title": "Outback Overflow: Hidden In The Streams 2",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "NTFS",
+      "ADS"
+    ],
+    "status": "solved",
+    "points": 75,
+    "file": "writeups/ukiddgj/oo-hidden-in-the-streams-2.md"
+  },
+  {
+    "id": "oo-transmission-received",
+    "title": "Outback Overflow: Transmission Received",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "Audio",
+      "GGWave"
+    ],
+    "status": "solved",
+    "points": 100,
+    "file": "writeups/ukiddgj/oo-transmission-received.md"
+  },
+  {
+    "id": "oo-no-caller-id",
+    "title": "Outback Overflow: No Caller ID",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "Audio",
+      "DTMF"
+    ],
+    "status": "solved",
+    "points": 100,
+    "file": "writeups/ukiddgj/oo-no-caller-id.md"
+  },
+  {
+    "id": "oo-unknown-encoding",
+    "title": "Outback Overflow: Unknown Encoding",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Crypto",
+      "Cangjie"
+    ],
+    "status": "solved",
+    "points": 100,
+    "file": "writeups/ukiddgj/oo-unknown-encoding.md"
+  },
+  {
+    "id": "oo-triple-trouble",
+    "title": "Outback Overflow: Triple Trouble",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Crypto",
+      "XOR",
+      "zlib"
+    ],
+    "status": "solved",
+    "points": 200,
+    "file": "writeups/ukiddgj/oo-triple-trouble.md"
+  },
+  {
+    "id": "oo-lullaby",
+    "title": "Outback Overflow: Lullaby",
+    "event": "Outback Overflow",
+    "author": "UkiddGj",
+    "date": "2026-11-22",
+    "tags": [
+      "Forensics",
+      "Audio",
+      "Spectrogram"
+    ],
+    "status": "solved",
+    "points": 50,
+    "file": "writeups/ukiddgj/oo-lullaby.md"
   }
 ]

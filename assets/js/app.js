@@ -131,8 +131,13 @@ const LANES = [
 const EVENT_PREFIX = /^(.*?(?:ctf|hack)[^:]*?)\s*[:\-–]\s+/i;
 const STATUS_LABEL = { partial: "PARTIAL", unsolved: "UNSOLVED" };
 const laneOf = p => LANES.find(([, , t]) => t(p));
-const eventOf = p => { const m = p.title.match(EVENT_PREFIX); return m ? m[1].trim() : null; };
-const shortTitle = p => p.title.replace(EVENT_PREFIX, "").replace(/\s+writeup$/i, "");
+/* an explicit "event" field wins; otherwise guess it from the title prefix */
+const eventOf = p => { if (p.event) return p.event; const m = p.title.match(EVENT_PREFIX); return m ? m[1].trim() : null; };
+const shortTitle = p => {
+  if (p.event && p.title.toLowerCase().startsWith(p.event.toLowerCase()))
+    return p.title.slice(p.event.length).replace(/^\s*[:\-–]\s*/, "") || p.title;
+  return p.title.replace(EVENT_PREFIX, "").replace(/\s+writeup$/i, "");
+};
 
 async function loadPosts() {
   const [blog, members] = await Promise.all([
@@ -158,7 +163,8 @@ async function loadPosts() {
     tags: toList(w.tags),
     date: String(w.date || "").slice(0, 10),
     snippet: String(w.summary || "").trim(),
-    status: w.status
+    status: w.status,
+    event: w.event || null
   }));
   const posts = [...fromBlog, ...fromMembers]
     .filter(p => p.title && p.date)
@@ -237,11 +243,38 @@ function renderVault({ posts }) {
 
   const laneCounts = ctf.reduce((acc, w) => (acc[w.lane[0]] = (acc[w.lane[0]] || 0) + 1, acc), {});
   const authorCounts = posts.reduce((acc, w) => (acc[w.author] = (acc[w.author] || 0) + 1, acc), {});
+  const laneOpts = [["all", "all", ctf.length], ...LANES.map(([k, l]) => [k, l, laneCounts[k] || 0]).filter(f => f[2])];
+  const authorOpts = [["all", "everyone", posts.length], ...authors.map(a => [a, a, authorCounts[a]])];
+  const tint = k => AUTHOR_COLORS[k] ? ` style="--who:${AUTHOR_COLORS[k]}"` : "";
+
+  /* desktop: chip rows. phones: two dropdowns. Both drive the same state. */
   $("filters").innerHTML = `
-    <div class="frow" data-kind="lane">${[["all", "all", ctf.length], ...LANES.map(([k, l]) => [k, l, laneCounts[k] || 0]).filter(f => f[2])]
+    <div class="frow" data-kind="lane">${laneOpts
       .map(([k, l, n]) => `<button class="${k === state.lane ? "on" : ""}" data-f="${k}">${l}<span>${n}</span></button>`).join("")}</div>
-    ${authors.length > 1 ? `<div class="frow" data-kind="author"><em>BY</em>${[["all", "everyone", posts.length], ...authors.map(a => [a, a, authorCounts[a]])]
-      .map(([k, l, n]) => `<button class="${k === state.author ? "on" : ""}" data-f="${esc(k)}"${AUTHOR_COLORS[k] ? ` style="--who:${AUTHOR_COLORS[k]}"` : ""}>${esc(l)}<span>${n}</span></button>`).join("")}</div>` : ""}`;
+    ${authors.length > 1 ? `<div class="frow" data-kind="author"><em>BY</em>${authorOpts
+      .map(([k, l, n]) => `<button class="${k === state.author ? "on" : ""}" data-f="${esc(k)}"${tint(k)}>${esc(l)}<span>${n}</span></button>`).join("")}</div>` : ""}
+    <div class="fsel">
+      <label><span>CATEGORY</span><select data-kind="lane" aria-label="Filter by category">${laneOpts
+        .map(([k, l, n]) => `<option value="${k}"${k === state.lane ? " selected" : ""}>${l.toUpperCase()} (${n})</option>`).join("")}</select></label>
+      ${authors.length > 1 ? `<label><span>AUTHOR</span><select data-kind="author" aria-label="Filter by author">${authorOpts
+        .map(([k, l, n]) => `<option value="${esc(k)}"${k === state.author ? " selected" : ""}>${esc(l.toUpperCase())} (${n})</option>`).join("")}</select></label>` : ""}
+    </div>`;
+
+  const setFilter = (kind, value) => {
+    state[kind] = value;
+    $("filters").querySelectorAll(`.frow[data-kind="${kind}"] button`).forEach(x => x.classList.toggle("on", x.dataset.f === value));
+    const sel = $("filters").querySelector(`select[data-kind="${kind}"]`);
+    if (sel) {
+      sel.value = value;
+      sel.parentElement.style.setProperty("--who", kind === "author" && AUTHOR_COLORS[value] ? AUTHOR_COLORS[value] : "");
+    }
+    if (kind === "author") {
+      const u = new URL(location.href);
+      value === "all" ? u.searchParams.delete("author") : u.searchParams.set("author", value);
+      history.replaceState(null, "", u);
+    }
+    render();
+  };
 
   const render = () => {
     const match = w => (state.lane === "all" || w.lane?.[0] === state.lane) && (state.author === "all" || w.author === state.author);
@@ -252,19 +285,14 @@ function renderVault({ posts }) {
     const any = $("ctfGrid").children.length || $("events").children.length;
     $("events").insertAdjacentHTML("beforeend", any ? "" : `<div class="vault-error">NOTHING HERE FOR THAT FILTER YET.</div>`);
   };
-  render();
+  setFilter("author", state.author);
 
   $("filters").addEventListener("click", e => {
     const btn = e.target.closest("button"); if (!btn) return;
-    const row = btn.parentElement;
-    row.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === btn));
-    state[row.dataset.kind] = btn.dataset.f;
-    if (row.dataset.kind === "author") {
-      const u = new URL(location.href);
-      state.author === "all" ? u.searchParams.delete("author") : u.searchParams.set("author", state.author);
-      history.replaceState(null, "", u);
-    }
-    render();
+    setFilter(btn.parentElement.dataset.kind, btn.dataset.f);
+  });
+  $("filters").addEventListener("change", e => {
+    if (e.target.matches("select")) setFilter(e.target.dataset.kind, e.target.value);
   });
 
   return { total: posts.length, byAuthor: authorCounts };
@@ -296,7 +324,7 @@ async function renderWriteupPage() {
     md = await res.text();
   } catch { return fail("COULDN'T LOAD THIS WRITEUP."); }
 
-  const post = { title: w.title, tags: toList(w.tags), categories: [] };
+  const post = { title: w.title, tags: toList(w.tags), categories: [], event: w.event };
   const lane = laneOf(post), event = eventOf(post), title = shortTitle(post);
   document.title = `${title} | T4R0T`;
 
@@ -316,8 +344,8 @@ async function renderWriteupPage() {
   renderer.image = (href, ttl, text) => `<figure><img src="${esc(href)}" alt="${esc(text)}" loading="lazy">${text ? `<figcaption>${esc(text)}</figcaption>` : ""}</figure>`;
 
   const html = DOMPurify.sanitize(marked.parse(md, { renderer, gfm: true }), { ADD_ATTR: ["target"] });
-  const idx = list.filter(x => eventOf({ title: x.title }) === event).findIndex(x => x.id === w.id);
-  const next = event ? list.filter(x => eventOf({ title: x.title }) === event)[idx + 1] : null;
+  const siblings = event ? list.filter(x => eventOf(x) === event && x.author === w.author) : [];
+  const next = siblings[siblings.findIndex(x => x.id === w.id) + 1] || null;
 
   box.innerHTML = `
     <a class="back" href="writeups.html">← THE VAULT</a>
@@ -329,6 +357,7 @@ async function renderWriteupPage() {
         <a class="by-link" href="writeups.html?author=${encodeURIComponent(w.author)}" style="--who:${AUTHOR_COLORS[w.author] || "var(--cyan)"}">BY ${esc(w.author)}</a>
         ${lane ? `<span class="lane ${lane[0]}">${lane[1]}</span>` : ""}
         ${statusChip(w)}
+        ${w.points ? `<span class="chip pts">${Number(w.points)} PTS</span>` : ""}
         ${toList(w.tags).filter(t => !lane || t.toLowerCase() !== lane[1]).map(t => `<span class="chip">${esc(t)}</span>`).join("")}
         ${w.pdf ? `<a class="pdf-link" href="${esc(w.pdf)}" target="_blank" rel="noopener">ORIGINAL PDF ↗</a>` : ""}
       </div>
@@ -339,7 +368,7 @@ async function renderWriteupPage() {
     </div>
     <footer class="wu-foot">
       <a class="btn sec cut" href="writeups.html?author=${encodeURIComponent(w.author)}">MORE BY ${esc(w.author.toUpperCase())}</a>
-      ${next ? `<a class="btn pri cut" href="writeup.html?id=${encodeURIComponent(next.id)}">NEXT: ${esc(shortTitle({ title: next.title }).toUpperCase())} →</a>` : ""}
+      ${next ? `<a class="btn pri cut" href="writeup.html?id=${encodeURIComponent(next.id)}">NEXT: ${esc(shortTitle(next).toUpperCase())} →</a>` : ""}
     </footer>`;
 
   box.querySelectorAll('.prose a[href^="http"]').forEach(a => { a.target = "_blank"; a.rel = "noopener"; });
