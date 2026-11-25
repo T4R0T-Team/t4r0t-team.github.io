@@ -1,6 +1,6 @@
 /* =========================================================
-   T4R0T team site
-   Fonts: change these three lines to restyle the whole site
+    T4R0T team site
+    Fonts: change these three lines to restyle the whole site
    ========================================================= */
 :root{
   --display: "Anton", Impact, sans-serif;     /* titles, names, numbers */
@@ -152,6 +152,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .player.lead .tl::before{color:var(--mag)}
 .player .socials{display:flex;gap:12px;margin-top:14px;font-family:var(--label);font-size:11px;letter-spacing:2px;color:var(--muted)}
 .player .socials a:hover{color:var(--cyan)}
+.lane.crypto{color:#6ea8ff;border-color:#6ea8ff44}
+.player.creator .ribbon{background:var(--amber)}
+.player.creator .no b{color:var(--amber)}
+.player.creator:hover .av{color:var(--amber)}
+.player.creator .tl::before{color:var(--amber)}
+.player:not(:has(.tl)) .socials{margin-top:auto;padding-top:18px;border-top:1px dashed var(--line)}
+.player.lead .no,.player.creator .no{padding-right:58px}
 
 /* =================== RECORD =================== */
 .feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));border-left:1px solid var(--line)}

@@ -34,25 +34,31 @@ async function getJSON(url) {
    ========================================================= */
 const SPECIALTY_LANE = [
   [/forensic/i, "for"], [/reverse|binary|pwn/i, "rev"], [/ai|data|machine/i, "ai"],
-  [/osint|recon/i, "osint"], [/.*/, "web"]
+  [/osint|recon/i, "osint"], [/crypt/i, "crypto"], [/.*/, "web"]
 ];
 const laneForSpecialty = s => SPECIALTY_LANE.find(([re]) => re.test(s))[1];
+const isCreatorRole = m => /creator/i.test(m.role || "");
+const playerCount = members => members.filter(m => !isCreatorRole(m)).length;
 const initials = h => h.replace(/[^A-Za-z]/g, "").slice(0, 2).toUpperCase();
 const LINK_LABEL = { github: "GITHUB", ctftime: "CTFTIME", linkedin: "LINKEDIN", website: "WEB" };
 
 function renderRoster(members) {
-  $("rosterSub").innerHTML = `<span>${pad(members.length)} PLAYERS / ${pad(new Set(members.map(m => laneForSpecialty(m.specialty[0]))).size)} LANES</span><span>TVETMARA PETALING JAYA</span>`;
+  const creators = members.length - playerCount(members);
+  const lanes = new Set(members.map(m => laneForSpecialty(m.specialty[0]))).size;
+  const counts = [`${pad(playerCount(members))} PLAYERS`, creators ? `${pad(creators)} CHALL DEVS` : null, `${pad(lanes)} LANES`].filter(Boolean).join(" / ");
+  $("rosterSub").innerHTML = `<span>${counts}</span><span>TVETMARA PETALING JAYA</span>`;
   $("lineup").innerHTML = members.map((m, i) => {
     const isLead = m.role === "Leader";
+    const isCreator = isCreatorRole(m);
     const links = Object.entries(m.links || {}).filter(([, url]) => url);
     return `
-    <article class="player gl${isLead ? " lead" : ""}">
-      ${isLead ? '<div class="ribbon">CAPTAIN</div>' : ""}
+    <article class="player gl${isLead ? " lead" : ""}${isCreator ? " creator" : ""}">
+      ${isLead ? '<div class="ribbon">CAPTAIN</div>' : isCreator ? '<div class="ribbon">CHALL DEV</div>' : ""}
       <div class="no"><span>NO.</span><b>${pad(i + 1)}</b></div>
       <div class="av">${m.avatar ? `<img src="${esc(m.avatar)}" alt="${esc(m.handle)}" loading="lazy">` : esc(initials(m.handle))}</div>
       <div class="name gt">${esc(m.handle)}</div>
       <div class="tags">${m.specialty.map(s => `<span class="lane ${laneForSpecialty(s)}">${esc(s)}</span>`).join("")}</div>
-      <p class="tl">${esc(m.tagline)}</p>
+      ${m.tagline ? `<p class="tl">${esc(m.tagline)}</p>` : ""}
       ${links.length ? `<div class="socials">${links.map(([k, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener">${LINK_LABEL[k] || k.toUpperCase()} ↗</a>`).join("")}</div>` : ""}
     </article>`;
   }).join("");
@@ -454,7 +460,7 @@ function initTerminal(state) {
   const cmds = {
     help: () => "whoami · ls members · cat motto · stats · next · font [e|f|g] · submit <flag> · clear · exit",
     whoami: () => "T4R0T, CTF team, TVETMARA Petaling Jaya, Malaysia. est. 2025",
-    "ls members": () => state.members.map(m => m.handle).join("  "),
+    "ls members": () => state.members.map(m => m.handle + (m.role === "Leader" ? " [captain]" : isCreatorRole(m) ? " [Chall Dev]" : "")).join("  "),
     "cat motto": () => "Hack To Learn, Not Learn to Hack",
     stats: () => `${state.events} events · best team finish ${state.best} · ${state.writeups ?? "?"} writeups`,
     next: () => nextMatch ? `${nextMatch.event} ${nextMatch.stage}, ${nextMatch.format}, ${nextMatch.dates}` : "no match locked in yet. stay tuned.",
@@ -521,8 +527,8 @@ function initTerminal(state) {
     nextMatch = next;
     if (renderNext()) setInterval(renderNext, 1000);
     const paint = () => {
-      renderHeroStats({ players: members.length, ...state });
-      renderTiles({ players: members.length, ...state });
+      renderHeroStats({ players: playerCount(members), ...state });
+      renderTiles({ players: playerCount(members), ...state });
     };
     paint();
     try { state.writeups = (await loadPosts()).posts.length; } catch {}
