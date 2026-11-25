@@ -1,0 +1,151 @@
+[
+  {
+    "id": "ihack-feel-my-wrath",
+    "title": "I-Hack CTF 2026: Feel My Wrath",
+    "author": "Kryy",
+    "date": "2026-10-31",
+    "tags": [
+      "Forensics",
+      "Reverse Engineering",
+      "Volatility3",
+      "Radare2"
+    ],
+    "status": "solved",
+    "file": "writeups/kryy/ihack-feel-my-wrath.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/FIRST%20CTF%20WRITEUP.pdf",
+    "summary": "An FL Studio session inside a Windows memory dump leads to a loaded CLAP plugin, and a flag built from x86-64 immediates."
+  },
+  {
+    "id": "init-red-johns-footprints",
+    "title": "InIt CTF: Red John's Footprints",
+    "author": "Kryy",
+    "date": "2026-11-15",
+    "tags": [
+      "OSINT",
+      "GitHub"
+    ],
+    "status": "solved",
+    "file": "writeups/kryy/init-red-johns-footprints.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  },
+  {
+    "id": "init-double-encoding",
+    "title": "InIt CTF: Double Encoding",
+    "author": "Kryy",
+    "date": "2026-11-15",
+    "tags": [
+      "Crypto",
+      "Base64",
+      "ROT13"
+    ],
+    "status": "solved",
+    "file": "writeups/kryy/init-double-encoding.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  },
+  {
+    "id": "init-midnight-cipher",
+    "title": "InIt CTF: The Midnight Cipher",
+    "author": "Kryy",
+    "date": "2026-11-15",
+    "tags": [
+      "Crypto",
+      "Vigenere"
+    ],
+    "status": "solved",
+    "file": "writeups/kryy/init-midnight-cipher.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  },
+  {
+    "id": "init-photo-osint",
+    "title": "InIt CTF: Photo OSINT, Find the City",
+    "author": "Kryy",
+    "date": "2026-11-15",
+    "tags": [
+      "OSINT",
+      "Geolocation"
+    ],
+    "status": "solved",
+    "file": "writeups/kryy/init-photo-osint.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  },
+  {
+    "id": "init-known-plaintext-prng",
+    "title": "InIt CTF: Known Plaintext PRNG",
+    "author": "Kryy",
+    "date": "2026-11-15",
+    "tags": [
+      "Crypto",
+      "XOR",
+      "LCG"
+    ],
+    "status": "solved",
+    "file": "writeups/kryy/init-known-plaintext-prng.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  },
+  {
+    "id": "init-rsa-shared-prime",
+    "title": "InIt CTF: RSA Shared Prime Factor",
+    "author": "Kryy",
+    "date": "2026-11-15",
+    "tags": [
+      "Crypto",
+      "RSA"
+    ],
+    "status": "solved",
+    "file": "writeups/kryy/init-rsa-shared-prime.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  },
+  {
+    "id": "init-ec2-vault",
+    "title": "InIt CTF: EC2 Identity-Keyed Vault",
+    "author": "Kryy",
+    "date": "2026-11-15",
+    "tags": [
+      "Forensics",
+      "AES",
+      "Cloud"
+    ],
+    "status": "solved",
+    "file": "writeups/kryy/init-ec2-vault.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  },
+  {
+    "id": "init-red-john-returns",
+    "title": "InIt CTF: Red John Returns",
+    "author": "Kryy",
+    "date": "2026-11-15",
+    "tags": [
+      "OSINT",
+      "Hash Cracking"
+    ],
+    "status": "unsolved",
+    "file": "writeups/kryy/init-red-john-returns.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  },
+  {
+    "id": "init-cashnow",
+    "title": "InIt CTF: CashNow",
+    "author": "Kryy",
+    "date": "2026-11-15",
+    "tags": [
+      "Web",
+      "SSRF"
+    ],
+    "status": "partial",
+    "file": "writeups/kryy/init-cashnow.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  },
+  {
+    "id": "init-not-so-soon",
+    "title": "InIt CTF: @not_so_soon_",
+    "author": "Kryy",
+    "date": "2026-11-15",
+    "tags": [
+      "OSINT",
+      "Social Media"
+    ],
+    "status": "partial",
+    "file": "writeups/kryy/init-not-so-soon.md",
+    "pdf": "https://github.com/kry0xqt/CTF-Writeups/blob/main/CTF%20WRITEUP.pdf"
+  }
+]

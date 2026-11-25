@@ -2,7 +2,13 @@
   {
     "handle": "AmcaQt",
     "role": "Leader",
-    "specialty": ["Web", "OSINT", "Recon", "IoT"],
+    "color": "#00ffff",
+    "specialty": [
+      "Web",
+      "OSINT",
+      "Recon",
+      "IoT"
+    ],
     "tagline": "Nothing is safe. Anything can be hacked, even your life.",
     "avatar": "",
     "links": {
@@ -14,7 +20,10 @@
   {
     "handle": "Wan Ash",
     "role": "Challenge Creator",
-    "specialty": ["Digital Forensics"],
+    "color": "#e040fb",
+    "specialty": [
+      "Digital Forensics"
+    ],
     "tagline": "Imma do crack while cracking this code.",
     "avatar": "",
     "links": {}
@@ -22,29 +31,37 @@
   {
     "handle": "Uzair.Znl",
     "role": "Member",
-    "specialty": ["AI", "Data Science"],
+    "color": "#3dffa8",
+    "specialty": [
+      "AI",
+      "Data Science"
+    ],
     "tagline": "Sometimes machines have more common sense than people.",
     "avatar": "",
     "links": {}
   },
   {
-    "handle": "kry0xqt",
+    "handle": "Kryy",
     "role": "Member",
-    "specialty": ["Reverse Engineering"],
+    "color": "#ffb02e",
+    "specialty": [
+      "Reverse Engineering"
+    ],
     "tagline": "Give me the binary, I'll give you the source.",
     "avatar": "",
-    "links": {
-      "github": "https://github.com/kry0xqt"
-    }
+    "links": {}
   },
   {
     "handle": "UkiddGj",
     "role": "Member",
-    "specialty": ["AI", "Forensics", "Cryptography"],
-    "tagline": "I don't always test my code, but when I do, I do it in production.",
+    "color": "#6ea8ff",
+    "specialty": [
+      "AI",
+      "Forensics",
+      "Cryptography"
+    ],
+    "tagline": "",
     "avatar": "",
-    "links": {
-      "github": "https://github.com/ukiddnagata"
-    }
+    "links": {}
   }
 ]

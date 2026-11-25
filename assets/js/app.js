@@ -7,6 +7,8 @@ const CONFIG = {
   blog: "https://amcaqt.github.io",
   searchIndex: "https://amcaqt.github.io/assets/js/data/search.json",  // Chirpy rebuilds it on every deploy; Pages sends CORS * so cross-domain is fine
   fallback: "data/writeups-fallback.json",       // used if the live index can't be reached
+  blogAuthor: "AmcaQt",                           // everything on the Chirpy blog is credited to this handle
+  memberWriteups: "data/writeups.json",           // team members' writeups, read on writeup.html
   hideCategories: [/^project$/i, /^tryhackme$/i],
   eventMin: 3,                                    // posts needed before an event gets its own pack
   email: { user: "amcaqt06", host: ["gmail", "com"] },  // swap when the team email is ready
@@ -42,10 +44,10 @@ const playerCount = members => members.filter(m => !isCreatorRole(m)).length;
 const initials = h => h.replace(/[^A-Za-z]/g, "").slice(0, 2).toUpperCase();
 const LINK_LABEL = { github: "GITHUB", ctftime: "CTFTIME", linkedin: "LINKEDIN", website: "WEB" };
 
-function renderRoster(members) {
+function renderRoster(members, writeupCounts = {}) {
   const creators = members.length - playerCount(members);
   const lanes = new Set(members.map(m => laneForSpecialty(m.specialty[0]))).size;
-  const counts = [`${pad(playerCount(members))} PLAYERS`, creators ? `${pad(creators)} CHALL DEVS` : null, `${pad(lanes)} LANES`].filter(Boolean).join(" / ");
+  const counts = [`${pad(playerCount(members))} PLAYERS`, creators ? `${pad(creators)} CREATOR${creators > 1 ? "S" : ""}` : null, `${pad(lanes)} LANES`].filter(Boolean).join(" / ");
   $("rosterSub").innerHTML = `<span>${counts}</span><span>TVETMARA PETALING JAYA</span>`;
   $("lineup").innerHTML = members.map((m, i) => {
     const isLead = m.role === "Leader";
@@ -53,12 +55,13 @@ function renderRoster(members) {
     const links = Object.entries(m.links || {}).filter(([, url]) => url);
     return `
     <article class="player gl${isLead ? " lead" : ""}${isCreator ? " creator" : ""}">
-      ${isLead ? '<div class="ribbon">CAPTAIN</div>' : isCreator ? '<div class="ribbon">CHALL DEV</div>' : ""}
+      ${isLead ? '<div class="ribbon">CAPTAIN</div>' : isCreator ? '<div class="ribbon">CREATOR</div>' : ""}
       <div class="no"><span>NO.</span><b>${pad(i + 1)}</b></div>
       <div class="av">${m.avatar ? `<img src="${esc(m.avatar)}" alt="${esc(m.handle)}" loading="lazy">` : esc(initials(m.handle))}</div>
       <div class="name gt">${esc(m.handle)}</div>
       <div class="tags">${m.specialty.map(s => `<span class="lane ${laneForSpecialty(s)}">${esc(s)}</span>`).join("")}</div>
       ${m.tagline ? `<p class="tl">${esc(m.tagline)}</p>` : ""}
+      ${writeupCounts[m.handle] ? `<a class="wcount" href="writeups.html?author=${encodeURIComponent(m.handle)}">${pad(writeupCounts[m.handle])} WRITEUP${writeupCounts[m.handle] > 1 ? "S" : ""} →</a>` : ""}
       ${links.length ? `<div class="socials">${links.map(([k, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener">${LINK_LABEL[k] || k.toUpperCase()} ↗</a>`).join("")}</div>` : ""}
     </article>`;
   }).join("");
@@ -109,7 +112,10 @@ function renderRecord(list) {
 }
 
 /* =========================================================
-   WRITEUPS (live from Chirpy)
+   WRITEUPS
+   Two sources, merged into one list:
+   1. AmcaQt's Chirpy blog (live search index)
+   2. Member writeups in data/writeups.json, read on writeup.html
    ========================================================= */
 const RESEARCH = [["vuln", "Vulnerability Analysis", /vulnerability/i], ["threat", "Threat Analysis", /threat/i]];
 const LANES = [
@@ -118,59 +124,92 @@ const LANES = [
   ["osint", "osint", p => p.tags.some(t => /osint/i.test(t))],
   ["b2r", "boot2root", p => p.tags.some(t => /boot2root/i.test(t))],
   ["web", "web", p => p.tags.some(t => /web|lfi|rce|subdomain|sql/i.test(t))],
+  ["crypto", "crypto", p => p.tags.some(t => /crypt|rsa|cipher|aes|xor|rot13|base64/i.test(t))],
   ["misc", "mixed", () => true]
 ];
-const EVENT_PREFIX = /^(.+?\s\d{4}|hackdev)\s*[:\-]\s*/i;
+/* "Liga CTF 2026: X", "InIt CTF: X", "HackDev - X", "I-Hack CTF 2026: X" -> event name before the separator */
+const EVENT_PREFIX = /^(.*?(?:ctf|hack)[^:]*?)\s*[:\-–]\s+/i;
+const STATUS_LABEL = { partial: "PARTIAL", unsolved: "UNSOLVED" };
+const laneOf = p => LANES.find(([, , t]) => t(p));
+const eventOf = p => { const m = p.title.match(EVENT_PREFIX); return m ? m[1].trim() : null; };
+const shortTitle = p => p.title.replace(EVENT_PREFIX, "").replace(/\s+writeup$/i, "");
 
 async function loadPosts() {
-  let raw, live = true;
-  try { raw = await getJSON(CONFIG.searchIndex); }
-  catch { live = false; raw = await getJSON(CONFIG.fallback); }
-  const posts = raw.map(p => ({
+  const [blog, members] = await Promise.all([
+    getJSON(CONFIG.searchIndex).catch(() => getJSON(CONFIG.fallback)).catch(() => []),
+    getJSON(CONFIG.memberWriteups).catch(() => [])
+  ]);
+  const fromBlog = blog.map(p => ({
     title: String(p.title || "").trim(),
     url: new URL(p.url, CONFIG.blog).href,
+    external: true,
+    author: CONFIG.blogAuthor,
     categories: toList(p.categories),
     tags: toList(p.tags),
     date: String(p.date || "").slice(0, 10),
     snippet: String(p.snippet || "").trim()
-  }))
+  }));
+  const fromMembers = members.map(w => ({
+    title: String(w.title || "").trim(),
+    url: `writeup.html?id=${encodeURIComponent(w.id)}`,
+    external: false,
+    author: w.author,
+    categories: toList(w.categories),
+    tags: toList(w.tags),
+    date: String(w.date || "").slice(0, 10),
+    snippet: String(w.summary || "").trim(),
+    status: w.status
+  }));
+  const posts = [...fromBlog, ...fromMembers]
     .filter(p => p.title && p.date)
     .filter(p => !p.categories.some(c => CONFIG.hideCategories.some(re => re.test(c))))
     .sort((a, b) => b.date.localeCompare(a.date));
-  return { posts, live };
+  if (!posts.length) throw new Error("no posts");
+  return { posts };
 }
+
+/* member colours from members.json; anything that isn't a plain hex colour is ignored */
+let AUTHOR_COLORS = {};
+const setAuthorColors = members => {
+  AUTHOR_COLORS = Object.fromEntries(members.filter(m => /^#[0-9a-f]{3,8}$/i.test(m.color || "")).map(m => [m.handle, m.color]));
+};
+const who = name => `<b class="who" style="--who:${AUTHOR_COLORS[name] || "var(--ink)"}">${esc(name)}</b>`;
+
+const linkAttrs = p => p.external ? ' target="_blank" rel="noopener"' : "";
+const statusChip = p => STATUS_LABEL[p.status] ? `<span class="status ${p.status}">${STATUS_LABEL[p.status]}</span>` : "";
 
 function renderVault({ posts }) {
   const researchOf = p => RESEARCH.find(([, , re]) => p.categories.some(c => re.test(c)));
   const research = posts.filter(researchOf).map(p => ({ ...p, kind: researchOf(p) }));
-  const ctf = posts.filter(p => !researchOf(p)).map(p => {
-    const m = p.title.match(EVENT_PREFIX);
-    return { ...p, lane: LANES.find(([, , t]) => t(p)), source: m ? m[1] : "Blog", short: p.title.replace(EVENT_PREFIX, "").replace(/\s+writeup$/i, "") };
-  });
+  const ctf = posts.filter(p => !researchOf(p)).map(p => ({ ...p, lane: laneOf(p), source: eventOf(p) || "Blog", short: shortTitle(p) }));
 
   const bySource = ctf.reduce((acc, w) => ((acc[w.source] ||= []).push(w), acc), {});
-  const eventNames = Object.keys(bySource).filter(s => bySource[s].length >= CONFIG.eventMin);
+  const eventNames = Object.keys(bySource).filter(s => s !== "Blog" && bySource[s].length >= CONFIG.eventMin)
+    .sort((x, y) => bySource[y][0].date.localeCompare(bySource[x][0].date));
   const isEvent = w => eventNames.includes(w.source);
+  const authors = [...new Set(posts.map(p => p.author))];
 
-  $("vaultSub").innerHTML = `<span>${pad(ctf.length)} CTF WRITEUPS</span><span>${pad(research.length)} RESEARCH</span>${posts[0] ? `<span>UPDATED ${fmtDay(posts[0].date)}</span>` : ""}`;
+  $("vaultSub").innerHTML = `<span>${pad(ctf.length)} CTF WRITEUPS</span><span>${pad(research.length)} RESEARCH</span><span>${pad(authors.length)} AUTHORS</span>${posts[0] ? `<span>UPDATED ${fmtDay(posts[0].date)}</span>` : ""}`;
   $("ctfN").textContent = `${ctf.length} POSTS`;
   $("resN").textContent = `${research.length} POSTS`;
 
   $("resGrid").innerHTML = research.map((r, i) => `
-    <a class="card gl${i === 0 ? " new" : ""}" href="${esc(r.url)}" target="_blank" rel="noopener">
+    <a class="card gl${i === 0 ? " new" : ""}" href="${esc(r.url)}"${linkAttrs(r)}>
       ${i === 0 ? '<div class="ribbon">NEW</div>' : ""}
       <div class="top"><span class="lane ${r.kind[0]}">${r.kind[1]}</span></div>
       <h4 class="gt">${esc(r.title)}</h4>
       ${r.snippet ? `<p class="snip">${esc(r.snippet)}</p>` : ""}
+      <div class="by">BY ${who(r.author)}</div>
       <div class="bottom"><span class="date">${fmtDay(r.date)}</span><span class="go">READ →</span></div>
     </a>`).join("");
 
   const newest = ctf[0];
   const card = (w, inEvent = false) => `
-    <a class="card gl${w === newest ? " new" : ""}" href="${esc(w.url)}" target="_blank" rel="noopener">
+    <a class="card gl${w === newest ? " new" : ""}" href="${esc(w.url)}"${linkAttrs(w)}>
       ${w === newest ? '<div class="ribbon">NEW</div>' : ""}
       <div class="top"><span class="src">${inEvent ? fmtDay(w.date) : esc(w.source)}</span><span class="lane ${w.lane[0]}">${w.lane[1]}</span></div>
       <h4 class="gt">${esc(w.short)}</h4>
+      <div class="by">BY ${who(w.author)}${statusChip(w)}</div>
       <div class="bottom"><span class="date">${inEvent ? esc(w.tags.slice(0, 2).join(" · ")) : fmtDay(w.date)}</span><span class="go">READ →</span></div>
     </a>`;
 
@@ -179,41 +218,137 @@ function renderVault({ posts }) {
     const dates = all.map(w => w.date).sort();
     const [a, b] = [dates[0], dates.at(-1)].map(d => MONTHS[+d.split("-")[1] - 1]);
     const lanes = [...new Map(all.map(w => [w.lane[0], w.lane])).values()];
-    const label = name.replace(/\s*\d{4}$/, ""), year = (name.match(/\d{4}$/) || [""])[0];
+    const year = (name.match(/\d{4}$/) || [dates.at(-1).slice(0, 4)])[0];
+    const label = name.replace(/\s*\d{4}$/, "");
+    const crew = [...new Set(all.map(w => w.author))];
     return `
     <section class="event">
       <div class="ehead">
         <div><div class="ek">EVENT PACK // ${a === b ? a : `${a} – ${b}`} ${year}</div><h4>${esc(label)} <span>${year}</span></h4></div>
         <div class="es"><b>${pad(all.length)}</b><small>WRITEUPS</small></div>
-        <div class="lanes">${lanes.map(l => `<span class="lane ${l[0]}">${l[1]}</span>`).join("")}</div>
+        <div class="lanes">${lanes.map(l => `<span class="lane ${l[0]}">${l[1]}</span>`).join("")}${crew.length > 1 ? `<span class="crew">BY ${crew.map(who).join(" + ")}</span>` : ""}</div>
       </div>
       <div class="grid">${list.map(w => card(w, true)).join("")}</div>
     </section>`;
   };
 
-  const counts = ctf.reduce((acc, w) => (acc[w.lane[0]] = (acc[w.lane[0]] || 0) + 1, acc), {});
-  $("filters").innerHTML = [["all", "all", ctf.length], ...LANES.map(([k, l]) => [k, l, counts[k] || 0]).filter(f => f[2])]
-    .map(([k, l, n], i) => `<button class="${i ? "" : "on"}" data-f="${k}">${l}<span>${n}</span></button>`).join("");
+  const state = { lane: "all", author: new URLSearchParams(location.search).get("author") || "all" };
+  if (state.author !== "all" && !authors.includes(state.author)) state.author = "all";
 
-  const render = filter => {
-    const match = w => filter === "all" || w.lane[0] === filter;
+  const laneCounts = ctf.reduce((acc, w) => (acc[w.lane[0]] = (acc[w.lane[0]] || 0) + 1, acc), {});
+  const authorCounts = posts.reduce((acc, w) => (acc[w.author] = (acc[w.author] || 0) + 1, acc), {});
+  $("filters").innerHTML = `
+    <div class="frow" data-kind="lane">${[["all", "all", ctf.length], ...LANES.map(([k, l]) => [k, l, laneCounts[k] || 0]).filter(f => f[2])]
+      .map(([k, l, n]) => `<button class="${k === state.lane ? "on" : ""}" data-f="${k}">${l}<span>${n}</span></button>`).join("")}</div>
+    ${authors.length > 1 ? `<div class="frow" data-kind="author"><em>BY</em>${[["all", "everyone", posts.length], ...authors.map(a => [a, a, authorCounts[a]])]
+      .map(([k, l, n]) => `<button class="${k === state.author ? "on" : ""}" data-f="${esc(k)}"${AUTHOR_COLORS[k] ? ` style="--who:${AUTHOR_COLORS[k]}"` : ""}>${esc(l)}<span>${n}</span></button>`).join("")}</div>` : ""}`;
+
+  const render = () => {
+    const match = w => (state.lane === "all" || w.lane?.[0] === state.lane) && (state.author === "all" || w.author === state.author);
+    const byAuthor = w => state.author === "all" || w.author === state.author;
     $("ctfGrid").innerHTML = ctf.filter(w => !isEvent(w) && match(w)).map(w => card(w)).join("");
     $("events").innerHTML = eventNames.map(n => [n, bySource[n].filter(match)]).filter(([, l]) => l.length).map(([n, l]) => eventBlock(n, l)).join("");
+    $("resGrid").querySelectorAll(".card").forEach((el, i) => { el.hidden = !byAuthor(research[i]); });
+    const any = $("ctfGrid").children.length || $("events").children.length;
+    $("events").insertAdjacentHTML("beforeend", any ? "" : `<div class="vault-error">NOTHING HERE FOR THAT FILTER YET.</div>`);
   };
-  render("all");
+  render();
 
   $("filters").addEventListener("click", e => {
     const btn = e.target.closest("button"); if (!btn) return;
-    $("filters").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === btn));
-    render(btn.dataset.f);
+    const row = btn.parentElement;
+    row.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === btn));
+    state[row.dataset.kind] = btn.dataset.f;
+    if (row.dataset.kind === "author") {
+      const u = new URL(location.href);
+      state.author === "all" ? u.searchParams.delete("author") : u.searchParams.set("author", state.author);
+      history.replaceState(null, "", u);
+    }
+    render();
   });
 
-  return { total: posts.length };
+  return { total: posts.length, byAuthor: authorCounts };
 }
 
 function vaultFailed() {
   $("vaultSub").textContent = "";
   $("ctfGrid").outerHTML = `<div class="vault-error">COULDN'T LOAD THE VAULT. READ EVERYTHING ON <a href="${CONFIG.blog}" target="_blank" rel="noopener">THE BLOG ↗</a></div>`;
+}
+
+/* =========================================================
+   WRITEUP READER (writeup.html?id=...)
+   Markdown -> HTML with marked, then cleaned by DOMPurify.
+   ```flag blocks become flag boxes, images become captioned figures.
+   ========================================================= */
+async function renderWriteupPage() {
+  const box = $("wu");
+  const fail = msg => { box.innerHTML = `<a class="back" href="writeups.html">← THE VAULT</a><div class="vault-error" style="margin-top:28px">${msg}</div>`; };
+  const id = new URLSearchParams(location.search).get("id");
+  const list = await getJSON(CONFIG.memberWriteups).catch(() => []);
+  const w = list.find(x => x.id === id);
+  if (!w) return fail("WRITEUP NOT FOUND. MAYBE IT MOVED?");
+  if (!window.marked || !window.DOMPurify) return fail("READER FAILED TO LOAD. TRY A REFRESH.");
+
+  let md;
+  try {
+    const res = await fetch(w.file, { cache: "no-cache" });
+    if (!res.ok) throw new Error(res.status);
+    md = await res.text();
+  } catch { return fail("COULDN'T LOAD THIS WRITEUP."); }
+
+  const post = { title: w.title, tags: toList(w.tags), categories: [] };
+  const lane = laneOf(post), event = eventOf(post), title = shortTitle(post);
+  document.title = `${title} | T4R0T`;
+
+  const toc = [];
+  const slug = t => t.toLowerCase().replace(/<[^>]+>/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const renderer = new marked.Renderer();
+  renderer.heading = (text, level) => {
+    const idv = slug(text);
+    if (level === 2) toc.push([idv, text.replace(/<[^>]+>/g, "")]);
+    return `<h${level} id="${idv}">${text}</h${level}>`;
+  };
+  renderer.code = (code, lang) => {
+    if ((lang || "").trim() === "flag")
+      return `<div class="flagbox"><span>FLAG</span><code>${esc(code.trim())}</code></div>`;
+    return `<div class="codebox"><div class="codehd"><span>${esc(lang || "text")}</span><button type="button" class="copy">COPY</button></div><pre><code>${esc(code)}</code></pre></div>`;
+  };
+  renderer.image = (href, ttl, text) => `<figure><img src="${esc(href)}" alt="${esc(text)}" loading="lazy">${text ? `<figcaption>${esc(text)}</figcaption>` : ""}</figure>`;
+
+  const html = DOMPurify.sanitize(marked.parse(md, { renderer, gfm: true }), { ADD_ATTR: ["target"] });
+  const idx = list.filter(x => eventOf({ title: x.title }) === event).findIndex(x => x.id === w.id);
+  const next = event ? list.filter(x => eventOf({ title: x.title }) === event)[idx + 1] : null;
+
+  box.innerHTML = `
+    <a class="back" href="writeups.html">← THE VAULT</a>
+    <header class="wu-head">
+      <div class="drop">${esc((event || "WRITEUP").toUpperCase())} // ${fmtDay(w.date)}</div>
+      <h1 class="wu-title">${esc(title)}</h1>
+      ${w.summary ? `<p class="lede">${esc(w.summary)}</p>` : ""}
+      <div class="wu-meta">
+        <a class="by-link" href="writeups.html?author=${encodeURIComponent(w.author)}" style="--who:${AUTHOR_COLORS[w.author] || "var(--cyan)"}">BY ${esc(w.author)}</a>
+        ${lane ? `<span class="lane ${lane[0]}">${lane[1]}</span>` : ""}
+        ${statusChip(w)}
+        ${toList(w.tags).filter(t => !lane || t.toLowerCase() !== lane[1]).map(t => `<span class="chip">${esc(t)}</span>`).join("")}
+        ${w.pdf ? `<a class="pdf-link" href="${esc(w.pdf)}" target="_blank" rel="noopener">ORIGINAL PDF ↗</a>` : ""}
+      </div>
+    </header>
+    <div class="wu-body">
+      <div class="prose" id="prose">${html}</div>
+      ${toc.length > 2 ? `<aside class="toc"><div class="hd">// ON THIS PAGE</div>${toc.map(([i, t]) => `<a href="#${i}">${esc(t)}</a>`).join("")}</aside>` : ""}
+    </div>
+    <footer class="wu-foot">
+      <a class="btn sec cut" href="writeups.html?author=${encodeURIComponent(w.author)}">MORE BY ${esc(w.author.toUpperCase())}</a>
+      ${next ? `<a class="btn pri cut" href="writeup.html?id=${encodeURIComponent(next.id)}">NEXT: ${esc(shortTitle({ title: next.title }).toUpperCase())} →</a>` : ""}
+    </footer>`;
+
+  box.querySelectorAll('.prose a[href^="http"]').forEach(a => { a.target = "_blank"; a.rel = "noopener"; });
+  box.querySelectorAll(".copy").forEach(b => b.addEventListener("click", async () => {
+    const code = b.closest(".codebox").querySelector("code").textContent;
+    try { await navigator.clipboard.writeText(code); b.textContent = "COPIED"; }
+    catch { b.textContent = "SELECT + COPY"; }
+    setTimeout(() => { b.textContent = "COPY"; }, 1600);
+  }));
 }
 
 /* =========================================================
@@ -460,7 +595,7 @@ function initTerminal(state) {
   const cmds = {
     help: () => "whoami · ls members · cat motto · stats · next · font [e|f|g] · submit <flag> · clear · exit",
     whoami: () => "T4R0T, CTF team, TVETMARA Petaling Jaya, Malaysia. est. 2025",
-    "ls members": () => state.members.map(m => m.handle + (m.role === "Leader" ? " [captain]" : isCreatorRole(m) ? " [Chall Dev]" : "")).join("  "),
+    "ls members": () => state.members.map(m => m.handle + (m.role === "Leader" ? " [captain]" : isCreatorRole(m) ? " [creator]" : "")).join("  "),
     "cat motto": () => "Hack To Learn, Not Learn to Hack",
     stats: () => `${state.events} events · best team finish ${state.best} · ${state.writeups ?? "?"} writeups`,
     next: () => nextMatch ? `${nextMatch.event} ${nextMatch.stage}, ${nextMatch.format}, ${nextMatch.dates}` : "no match locked in yet. stay tuned.",
@@ -512,13 +647,21 @@ function initTerminal(state) {
     page === "home" ? getJSON("data/next-match.json").catch(() => null) : null
   ]);
   state.members = members;
+  setAuthorColors(members);
 
   const sorted = [...achievements];
   const teamRanked = sorted.filter(a => a.rank && a.type !== "solo");
   state.events = sorted.length;
   state.best = teamRanked.length ? "#" + Math.min(...teamRanked.map(a => a.rank)) : "—";
 
-  if (page === "roster") renderRoster(members);
+  if (page === "roster") {
+    renderRoster(members);
+    loadPosts().then(({ posts }) => {
+      const counts = posts.reduce((acc, p) => (acc[p.author] = (acc[p.author] || 0) + 1, acc), {});
+      renderRoster(members, counts);
+    }).catch(() => {});
+  }
+  if (page === "writeup") renderWriteupPage();
   if (page === "about") { const lead = members.find(m => m.role === "Leader"); if (lead) $("captain").textContent = lead.handle; }
   if (page === "record") renderRecord(achievements);
   initTerminal(state);
